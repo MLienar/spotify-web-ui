@@ -60,7 +60,7 @@ const BgImage = styled(Image)`
 
 export default function Login() {
   const CLIENT_ID = "3f0500c622d14421961ad495060ca5f5";
-  const REDIRECT_URI = "https://stoic-euler-0c1014.netlify.app/";
+  const REDIRECT_URI = "https://stoic-euler-0c1014.netlify.app/callback";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "token";
   const SCOPE = "user-top-read";
