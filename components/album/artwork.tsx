@@ -8,6 +8,7 @@ interface Props {
   layout?: "fixed" | "fill" | "intrinsic" | "responsive" | undefined;
   size?: string;
   priority?: boolean | undefined;
+  hoverable?: boolean;
 }
 
 export default function Artwork({
@@ -16,6 +17,7 @@ export default function Artwork({
   onEnter = undefined,
   onLeave = undefined,
   priority = undefined,
+  hoverable = false,
 }: Props) {
   return (
     <Image

@@ -12,12 +12,10 @@ const Detail = styled.span`
 const Date = styled(Detail)`
   color: #ffffffa9;
   font-size: 1rem;
-  clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
 `;
 
 const Length = styled(Date)`
   color: #ffffff5c;
-  clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
 `;
 
 export default function AlbumDetails({ date, length }: Props) {

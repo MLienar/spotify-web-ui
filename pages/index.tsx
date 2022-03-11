@@ -3,7 +3,6 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Layout from "../components/layout";
-import ProfilePill from "../components/common/profilePill/profilePill";
 import { FavItems } from "../services/types";
 import { useRef, ReactElement, useEffect, useState, useContext } from "react";
 import { AppContext } from "../services/context";
@@ -11,7 +10,7 @@ import Login from "../components/login/login";
 import axios from "axios";
 import Gallery from "../components/gallery/gallery";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import gsap from "gsap";
 
 const Container = styled.div`
   padding: 50px;
@@ -31,7 +30,7 @@ const Container = styled.div`
 const Home = () => {
   const value = useContext(AppContext);
   let { token } = value.state;
-  let albumGotClicked = value.albumGotClicked;
+  // let albumGotClicked = value.albumGotClicked;
   const [loggedIn, setLoggedIn] = useState(false);
   const [data, setData] = useState<FavItems[]>([]);
 
@@ -58,11 +57,12 @@ const Home = () => {
         <Container>
           <h1>Your top artists</h1>
           {data.length > 0 &&
-            data.map((artist: FavItems) => (
+            data.map((artist: FavItems, index) => (
               <Gallery
                 subject={artist.name}
                 profilePic={artist.images[2].url}
                 key={artist.id}
+                order={index}
               />
             ))}
         </Container>

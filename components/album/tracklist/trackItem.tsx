@@ -9,11 +9,18 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 20px;
   cursor: pointer;
+  opacity: 0;
+  transform: translateX(20%);
   border-radius: 5px;
+  background: #fefefe18;
   &:hover {
-    background: #fefefe18;
+    background: #fefefe18 !important;
     transition: all 0.3s ease-out;
   }
+`;
+
+const TrackTitle = styled.h2`
+  font-size: 1.3rem;
 `;
 
 const TrackInfo = styled.div`
@@ -49,12 +56,12 @@ const Duration = styled.p`
 `;
 
 const PlayIcon = styled.span`
-  height: clamp(30px, 5vh, 60px);
+  height: 30px;
   aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 13px;
+  padding: 10px;
   background: white;
   border-radius: 50px;
   position: relative;
@@ -87,7 +94,7 @@ export default function TrackItem({
   return (
     <Container className="track-item">
       <TrackInfo>
-        <h2>{title}</h2>
+        <TrackTitle>{title}</TrackTitle>
         <ArtistList>
           {artists.map((artist) => (
             <li key={artist.name}>{artist.name}</li>
@@ -97,7 +104,7 @@ export default function TrackItem({
       <Details>
         <Duration>{new Date(duration).toISOString().slice(14, 19)}</Duration>
         <PlayIcon>
-          <Image src={Play} layout="intrinsic" />
+          <Image src={Play} height={15} width={15} />
         </PlayIcon>
       </Details>
     </Container>

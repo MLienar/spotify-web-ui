@@ -53,6 +53,7 @@ export default function ProfilePill() {
           if (error.response.status === 401) {
             localStorage.clear();
             router.push("/");
+            router.reload();
           }
         });
     }

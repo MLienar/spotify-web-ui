@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Image from "next/image";
 import Bg from "../../public/images/login-bg.jpg";
 import { useRef } from "react";
+import gsap from "gsap";
+import { useIsomorphicLayoutEffect } from "react-use";
 
 const Container = styled.div`
   position: fixed;
@@ -24,12 +26,15 @@ const Explainer = styled.h1`
   width: clamp(200px, 30vw, 500px);
   text-align: center;
   font-weight: 600;
-  opacity: 1;
+  opacity: 0;
+  z-index: 2;
+  transform: translateY(100%);
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
 `;
 
 const Link = styled.a`
   color: white;
-  opacity: 1;
+  opacity: 0;
   background: #1ad860;
   font-size: 1.1rem;
   font-weight: 600;
@@ -39,6 +44,8 @@ const Link = styled.a`
   z-index: 5;
   gap: 5px;
   align-items: center;
+  transform: translateY(100%);
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
 `;
 
 const BgImage = styled(Image)`
@@ -47,6 +54,8 @@ const BgImage = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;
+  opacity: 0;
+  transform: translateY(50%) scale(0.5);
 `;
 
 export default function Login() {
@@ -56,8 +65,30 @@ export default function Login() {
   const RESPONSE_TYPE = "token";
   const SCOPE = "user-top-read";
 
+  const ref = useRef<HTMLDivElement>(null);
+  const c = gsap.utils.selector(ref);
+  const tl = useRef<any>();
+
+  useIsomorphicLayoutEffect(() => {
+    tl.current = gsap
+      .timeline({
+        defaults: { duration: 1, ease: "Power3.easeOut", delay: 0.5 },
+      })
+      .to(c(".bg-image"), {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      })
+      .to(c(".text-reveal"), {
+        opacity: 1,
+        y: 0,
+        clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+        stagger: 0.3,
+      });
+  }, []);
+
   return (
-    <Container>
+    <Container ref={ref}>
       <BgImage
         src={Bg}
         layout="fill"
@@ -65,8 +96,11 @@ export default function Login() {
         className="bg-image"
         priority
       />
-      <Explainer>This app requires you to be logged in to Spotify</Explainer>
+      <Explainer className="text-reveal">
+        This app requires you to be logged in to Spotify
+      </Explainer>
       <Link
+        className="text-reveal"
         href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`}
       >
         Login

@@ -8,7 +8,6 @@ import {
   useState,
   useContext,
 } from "react";
-import { AnimatePresence } from "framer-motion";
 import { AppWrapper, AppContext } from "../services/context";
 import App from "next/app";
 
@@ -22,15 +21,7 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout || ((page) => page);
-  return (
-    <AppWrapper>
-      {getLayout(
-        <AnimatePresence exitBeforeEnter>
-          <Component {...pageProps} />
-        </AnimatePresence>
-      )}
-    </AppWrapper>
-  );
+  return <AppWrapper>{getLayout(<Component {...pageProps} />)}</AppWrapper>;
 }
 
 export default MyApp;
