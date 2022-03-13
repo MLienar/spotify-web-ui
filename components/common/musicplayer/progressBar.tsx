@@ -1,24 +1,28 @@
-import styled from "styled-components";
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 const Minutes = styled.p`
   color: #999999;
   font-size: 0.7rem;
-`;
+  width: 35px;
+  text-align: center;
+`
 
 const Bar = styled.div`
-  height: 3px;
-  width: clamp(250px, 30vw, 500px);
+  height: 4px;
+  width: clamp(150px, 20vw, 400px);
   background: #2f2f2f;
   border-radius: 5px;
+  cursor: pointer;
   margin: 0 10px;
   position: relative;
-`;
+`
 
 const Progress = styled.div`
   position: absolute;
@@ -27,21 +31,45 @@ const Progress = styled.div`
   top: 0;
   background: white;
   border-radius: 5px;
-`;
+`
 type Props = {
-  currentTime?: string;
-  duration?: string;
-  ratio: number;
-};
+  currentTime: number
+  duration: number
+  seek: any
+}
 
-export default function ProgressBar(props: Props) {
+const convertTime = (time: number) => {
+  return new Date(time).toISOString().substr(14, 5)
+}
+
+export default function ProgressBar({
+  currentTime = 0,
+  duration = 0,
+  seek,
+}: Props) {
+  const [ratio, setRatio] = useState(0)
+
+  useEffect(() => {
+    setRatio((currentTime / duration) * 100)
+  }, [currentTime])
+
+  const seekPosition = (e: any) => {
+    const barPosition = e.target.getBoundingClientRect()
+    const width = barPosition.right - barPosition.left
+    const clickPos = e.clientX - barPosition.left
+
+    const percentage = clickPos / width
+    const timeToSeek = duration * percentage
+    seek(timeToSeek)
+  }
+
   return (
     <Container>
-      <Minutes>{props.currentTime}</Minutes>
-      <Bar>
-        <Progress style={{ width: props.ratio + "%" }}></Progress>
+      <Minutes>{convertTime(currentTime)}</Minutes>
+      <Bar onClick={seekPosition}>
+        <Progress style={{ width: ratio + '%' }}></Progress>
       </Bar>
-      <Minutes>{props.duration}</Minutes>
+      <Minutes>{convertTime(duration)}</Minutes>
     </Container>
-  );
+  )
 }

@@ -1,13 +1,18 @@
-import styled from "styled-components";
-import Album from "./album";
-import axios from "axios";
-import Image from "next/image";
-import { useState, useEffect, useContext, useRef } from "react";
-import { useIsomorphicLayoutEffect, useIntersection } from "react-use";
-import { AppContext } from "../../services/context";
-import gsap from "gsap";
-import checkIfInView from "../../services/checkIfInView";
-import useOnScreen from "../../hooks/useOnScreen";
+import styled from 'styled-components'
+import Album from './album'
+import { Album as AlbumType } from '../../services/types'
+import axios from 'axios'
+import Image from 'next/image'
+import { useState, useEffect, useContext, useRef } from 'react'
+import { useIsomorphicLayoutEffect, useIntersection } from 'react-use'
+import { AppContext } from '../../services/context'
+import gsap from 'gsap'
+import checkIfInView from '../../services/checkIfInView'
+import useOnScreen from '../../hooks/useOnScreen'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import useSpotify from '../../hooks/useSpotify'
+import filterItems from './filterItems'
 
 const Container = styled.div`
   display: flex;
@@ -16,7 +21,7 @@ const Container = styled.div`
   width: 100%;
   position: relative;
   height: 30vh;
-`;
+`
 
 const GallerySlide = styled.div`
   display: flex;
@@ -31,47 +36,55 @@ const GallerySlide = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
+`
 
 const Title = styled.h2`
   text-transform: capitalize;
   opacity: 0;
   transform: translateY(50%);
   clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
-`;
+`
 
 const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
   margin-bottom: 20px;
-`;
+`
 
 const ProfilePic = styled(Image)`
   border-radius: 50px;
   transform: scale(0.5) translateY(100%);
   opacity: 0;
-`;
+`
 
 interface Props {
-  subject: string;
-  profilePic?: string | null;
-  order: number;
+  subject: string
+  profilePic?: string | null
+  order: number
+  artistId: string
 }
 
-export default function Gallery({ subject, profilePic = null, order }: Props) {
-  const [data, setData] = useState([]);
-  const value = useContext(AppContext);
-  const ref = useRef(null);
-  const r = gsap.utils.selector(ref);
-  const tl = useRef<any>();
+export default function Gallery({
+  subject,
+  profilePic = null,
+  order,
+  artistId,
+}: Props) {
+  const [data, setData] = useState<AlbumType[]>([])
+  const value = useContext(AppContext)
+  const ref = useRef(null)
+  const r = gsap.utils.selector(ref)
+  const tl = useRef<any>()
+  const { pathname } = useRouter()
+  const { data: session, status } = useSession()
+  const spotifyApi = useSpotify()
+
   const inView = useIntersection(ref, {
     root: null,
-    rootMargin: "0px",
+    rootMargin: '0px',
     threshold: 0.001,
-  });
-
-  // const [isInView, setIsInView] = useState(false);
+  })
 
   useIsomorphicLayoutEffect(() => {
     if (data.length > 1) {
@@ -79,87 +92,73 @@ export default function Gallery({ subject, profilePic = null, order }: Props) {
         .timeline({
           defaults: {
             duration: 1,
-            ease: "Power3.easeOut",
+            ease: 'Power3.easeOut',
           },
         })
         .to(ref.current, {
-          height: "unset",
+          height: 'unset',
           duration: 0.1,
           delay: 1,
         })
         .to(
-          r(".album-container"),
+          r('.album-container'),
           {
             opacity: 1,
             y: 0,
-            clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+            clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
             duration: 0.8,
             stagger: 0.2,
             scale: 1,
           },
-          "<"
+          '<'
         )
-        .to(
-          r(".profile-pic"),
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-          },
-          "-=1.5"
-        )
-        .to(
-          r("h2"),
-          {
-            opacity: 1,
-            y: 0,
-            clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
-          },
-          "-=1.5"
-        )
-        .to(r("h3"), {
+        .to(r('h3'), {
           opacity: 1,
-        });
+        })
+      if (profilePic) {
+        tl.current
+          .to(
+            r('.profile-pic'),
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            },
+            '-=1.5'
+          )
+          .to(
+            r('h2'),
+            {
+              opacity: 1,
+              y: 0,
+              clipPath: 'polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)',
+            },
+            '-=1.5'
+          )
+      }
 
-      if (order < 4) {
-        tl.current.play();
+      if (order < 4 && pathname === '/') {
+        tl.current.play()
       } else {
-        tl.current.seek(tl.current.duration());
+        tl.current.seek(tl.current.duration())
       }
     }
-  }, [data]);
+  }, [data])
 
   const params = {
-    q: `${subject}`,
-    type: "album",
-    limit: 4,
-  };
+    type: 'album',
+    limit: 10,
+  }
 
   useEffect(() => {
-    let { token } = value.state;
-    if (token) {
-      axios
-        .get(`https://api.spotify.com/v1/search`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: params,
-        })
-        .then((response) => {
-          setData(response.data.albums.items);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi.getArtistAlbums(artistId, params).then((data: any) => {
+        const albumsToDisplay = filterItems(data.body.items)
+        setData(albumsToDisplay)
+      })
     }
-  }, []);
+  }, [session, spotifyApi])
 
-  useEffect(() => {
-    if (inView?.isIntersecting) {
-      console.log(inView, subject);
-    }
-    // setIsInView(inView);
-  }, [inView]);
   return (
     <Container className="gallery" ref={ref}>
       {profilePic && (
@@ -185,5 +184,5 @@ export default function Gallery({ subject, profilePic = null, order }: Props) {
           ))}
       </GallerySlide>
     </Container>
-  );
+  )
 }

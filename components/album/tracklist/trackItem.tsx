@@ -1,7 +1,7 @@
-import { Artist } from "../../../services/types";
-import styled from "styled-components";
-import Play from "/public/images/play.png";
-import Image from "next/image";
+import { Artist } from '../../../services/types'
+import styled from 'styled-components'
+import Play from '/public/images/play.png'
+import Image from 'next/image'
 
 const Container = styled.div`
   display: flex;
@@ -17,17 +17,29 @@ const Container = styled.div`
     background: #fefefe18 !important;
     transition: all 0.3s ease-out;
   }
-`;
+`
 
-const TrackTitle = styled.h2`
-  font-size: 1.3rem;
-`;
-
-const TrackInfo = styled.div`
+const MainInfo = styled.div`
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
-`;
+`
+
+const TrackTitle = styled.h2`
+  font-size: 1.3rem;
+`
+
+const TrackInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+`
+
+const TrackIndex = styled.p`
+  color: #ffffff5c;
+  font-weight: 600;
+  font-size: 0.9rem;
+`
 
 const ArtistList = styled.ul`
   color: #ffffff8d;
@@ -42,18 +54,18 @@ const ArtistList = styled.ul`
       margin: 0 12px 0 0;
     }
   }
-`;
+`
 
 const Details = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 25px;
-`;
+`
 
 const Duration = styled.p`
   color: #ffffff8d;
-`;
+`
 
 const PlayIcon = styled.span`
   height: 30px;
@@ -76,37 +88,43 @@ const PlayIcon = styled.span`
       transition: all 0.2s ease-out;
     }
   }
-`;
+`
 
 interface Props {
-  title: string;
-  artists: Artist[];
-  duration: number;
-  preview: string;
+  title: string
+  artists: Artist[]
+  duration: number
+  preview: string
+  index: number
+  onClick: any
 }
 
 export default function TrackItem({
   title,
   artists,
   duration,
-  preview,
+  index,
+  onClick,
 }: Props) {
   return (
-    <Container className="track-item">
+    <Container className="track-item" onClick={onClick}>
       <TrackInfo>
-        <TrackTitle>{title}</TrackTitle>
-        <ArtistList>
-          {artists.map((artist) => (
-            <li key={artist.name}>{artist.name}</li>
-          ))}
-        </ArtistList>
+        <TrackIndex>{index + 1}</TrackIndex>
+        <MainInfo>
+          <TrackTitle>{title}</TrackTitle>
+          <ArtistList>
+            {artists.map((artist) => (
+              <li key={artist.name}>{artist.name}</li>
+            ))}
+          </ArtistList>
+        </MainInfo>
       </TrackInfo>
       <Details>
         <Duration>{new Date(duration).toISOString().slice(14, 19)}</Duration>
-        <PlayIcon>
+        <PlayIcon onClick={onClick}>
           <Image src={Play} height={15} width={15} />
         </PlayIcon>
       </Details>
     </Container>
-  );
+  )
 }

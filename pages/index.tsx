@@ -1,16 +1,18 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Layout from "../components/layout";
-import { FavItems } from "../services/types";
-import { useRef, ReactElement, useEffect, useState, useContext } from "react";
-import { AppContext } from "../services/context";
-import Login from "../components/login/login";
-import axios from "axios";
-import Gallery from "../components/gallery/gallery";
-import styled from "styled-components";
-import gsap from "gsap";
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import Image from 'next/image'
+import styles from '../styles/Home.module.css'
+import Layout from '../components/layout'
+import { FavItems } from '../services/types'
+import { useRef, ReactElement, useEffect, useState, useContext } from 'react'
+import { AppContext } from '../services/context'
+import Login from '../components/login/login'
+import axios from 'axios'
+import Gallery from '../components/gallery/gallery'
+import styled from 'styled-components'
+import gsap from 'gsap'
+import useSpotify from '../hooks/useSpotify'
+import { useSession } from 'next-auth/react'
 
 const Container = styled.div`
   padding: 50px;
@@ -25,56 +27,47 @@ const Container = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
+`
 
 const Home = () => {
-  const value = useContext(AppContext);
-  let { token } = value.state;
+  const value = useContext(AppContext)
+  const spotifyApi = useSpotify()
+  let { setAnimateAlbum } = useContext(AppContext)
   // let albumGotClicked = value.albumGotClicked;
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [data, setData] = useState<FavItems[]>([]);
+  const [loggedIn, setLoggedIn] = useState(false)
+  const { data: session, status } = useSession()
+  const [data, setData] = useState<FavItems[]>([])
 
   useEffect(() => {
-    if (token) {
-      axios
-        .get("https://api.spotify.com/v1/me/top/artists", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setData(response.data.items);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi.getMyTopArtists().then((data: any) => {
+        setData(data.body.items)
+      })
     }
-  }, [token]);
+    setAnimateAlbum(true)
+  }, [session, spotifyApi])
 
   return (
     <>
-      {token ? (
-        <Container>
-          <h1>Your top artists</h1>
-          {data.length > 0 &&
-            data.map((artist: FavItems, index) => (
-              <Gallery
-                subject={artist.name}
-                profilePic={artist.images[2].url}
-                key={artist.id}
-                order={index}
-              />
-            ))}
-        </Container>
-      ) : (
-        <Login />
-      )}
+      <Container>
+        <h1>Your top artists</h1>
+        {data.length > 0 &&
+          data.map((artist: FavItems, index) => (
+            <Gallery
+              subject={artist.name}
+              artistId={artist.id.toString()}
+              profilePic={artist.images[2].url}
+              key={artist.id}
+              order={index}
+            />
+          ))}
+      </Container>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
 
 Home.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
-};
+  return <Layout>{page}</Layout>
+}

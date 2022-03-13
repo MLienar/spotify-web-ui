@@ -1,16 +1,18 @@
-import styled from "styled-components";
-import { useState, useEffect, useContext } from "react";
-import { AppContext } from "../../../services/context";
-import axios from "axios";
-import LogoutButton from "./logoutButton";
-import ProfilePicture from "./profilePicture";
-import ProfileName from "./profileName";
-import { useRouter } from "next/router";
+import styled from 'styled-components'
+import { useState, useEffect, useContext } from 'react'
+import { AppContext } from '../../../services/context'
+import axios from 'axios'
+import LogoutButton from './logoutButton'
+import ProfilePicture from './profilePicture'
+import ProfileName from './profileName'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
+import useSpotify from '../../../hooks/useSpotify'
 
 interface ProfileData {
-  display_name: string;
-  id: string;
-  images: [];
+  display_name: string
+  id: string
+  images: []
 }
 
 const Container = styled.div`
@@ -29,35 +31,21 @@ const Container = styled.div`
   width: clamp(100px, 15vw, 150px);
   text-overflow: ellipsis;
   z-index: 10;
-`;
+`
 
 export default function ProfilePill() {
-  const [hover, setHover] = useState(false);
-  const [data, setData] = useState<ProfileData>({} as ProfileData);
-  const value = useContext(AppContext);
-  let { token } = value.state;
-  const router = useRouter();
-
+  const [hover, setHover] = useState(false)
+  const [data, setData] = useState<ProfileData>({} as ProfileData)
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  const spotifyApi = useSpotify()
   useEffect(() => {
-    if (token) {
-      axios
-        .get("https://api.spotify.com/v1/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setData(response.data);
-        })
-        .catch((error) => {
-          if (error.response.status === 401) {
-            localStorage.clear();
-            router.push("/");
-            router.reload();
-          }
-        });
+    if (spotifyApi.getAccessToken()) {
+      spotifyApi.getMe().then((data: any) => {
+        setData(data.body)
+      })
     }
-  }, [token]);
+  }, [session, spotifyApi])
 
   return (
     <Container
@@ -77,5 +65,5 @@ export default function ProfilePill() {
         </>
       )}
     </Container>
-  );
+  )
 }

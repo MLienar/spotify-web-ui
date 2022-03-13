@@ -1,20 +1,19 @@
-import Head from "next/head";
-import React from "react";
-import styled from "styled-components";
-import Navbar from "./common/navbar";
-import MusicPlayer from "./common/musicplayer";
-import ProfilePill from "./common/profilePill/profilePill";
-import { useEffect, useContext, useRef, useState } from "react";
-import { AppContext } from "../services/context";
-import { useIsomorphicLayoutEffect } from "react-use";
-import gsap from "gsap";
-import Transition from "./animation/pageTransition";
-import { useRouter } from "next/router";
-
+import Head from 'next/head'
+import React from 'react'
+import styled from 'styled-components'
+import Navbar from './common/navbar'
+import MusicPlayer from './common/musicplayer'
+import ProfilePill from './common/profilePill/profilePill'
+import { useEffect, useContext, useRef, useState } from 'react'
+import { AppContext } from '../services/context'
+import { useIsomorphicLayoutEffect } from 'react-use'
+import gsap from 'gsap'
+import Transition from './animation/pageTransition'
+import { useRouter } from 'next/router'
 type Props = {
-  children?: React.ReactNode;
-  title?: string;
-};
+  children?: React.ReactNode
+  title?: string
+}
 
 const Body = styled.div`
   display: grid;
@@ -24,7 +23,7 @@ const Body = styled.div`
   grid-row-gap: 0px;
   height: 100vh;
   width: 100vw;
-`;
+`
 
 const Main = styled.main`
   grid-area: 1 / 2 / 2 / 3;
@@ -38,49 +37,32 @@ const Main = styled.main`
   &::-webkit-scrollbar {
     display: none;
   }
-`;
+`
 
 export default function Layout({
   children,
-  title = "Spotify Web Player",
+  title = 'Spotify Web Player',
 }: Props) {
-  const value = useContext(AppContext);
-  const [displayChildren, setDisplayChildren] = useState(children);
-  const tl = value.timeline;
-  const el = useRef(null);
-  const router = useRouter();
+  const value = useContext(AppContext)
+  const [displayChildren, setDisplayChildren] = useState(children)
+  const tl = value.timeline
+  const el = useRef(null)
+  const router = useRouter()
 
   useIsomorphicLayoutEffect(() => {
     if (children !== displayChildren) {
       if (tl.duration() === 0) {
         // there are no outro animations, so immediately transition
-        setDisplayChildren(children);
+        setDisplayChildren(children)
       } else {
         tl.play().then(() => {
           // outro complete so reset to an empty paused tl
-          tl.seek(0).pause().clear();
-          setDisplayChildren(children);
-        });
+          tl.seek(0).pause().clear()
+          setDisplayChildren(children)
+        })
       }
     }
-  }, [children]);
-
-  useEffect(() => {
-    const hash: string = window.location.hash;
-    let newToken = window.localStorage.getItem("token");
-    if (hash && !newToken) {
-      //@ts-ignore
-      newToken = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-
-      window.location.hash = "";
-      window.localStorage.setItem("token", newToken);
-    }
-    value.setToken(newToken);
-  }, []);
+  }, [children])
 
   return (
     <>
@@ -95,5 +77,5 @@ export default function Layout({
         <MusicPlayer />
       </Body>
     </>
-  );
+  )
 }
