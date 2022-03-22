@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import gsap from 'gsap'
 import useSpotify from '../hooks/useSpotify'
 import { useSession } from 'next-auth/react'
+import HomeTitle from '../components/home/homeTitle'
 
 const Container = styled.div`
   padding: 50px;
@@ -37,7 +38,7 @@ const Home = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const { data: session, status } = useSession()
   const [data, setData] = useState<FavItems[]>([])
-
+  const [range, setRange] = useState('medium_term')
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi.getMyTopArtists().then((data: any) => {
@@ -47,22 +48,22 @@ const Home = () => {
     setAnimateAlbum(true)
   }, [session, spotifyApi])
 
+  const changeRange = () => {}
+
   return (
-    <>
-      <Container>
-        <h1>Your top artists</h1>
-        {data.length > 0 &&
-          data.map((artist: FavItems, index) => (
-            <Gallery
-              subject={artist.name}
-              artistId={artist.id.toString()}
-              profilePic={artist.images[2].url}
-              key={artist.id}
-              order={index}
-            />
-          ))}
-      </Container>
-    </>
+    <Container>
+      <HomeTitle changeRange={changeRange} />
+      {data.length > 0 &&
+        data.map((artist: FavItems, index) => (
+          <Gallery
+            subject={artist.name}
+            artistId={artist.id.toString()}
+            profilePic={artist.images[2].url}
+            key={artist.id}
+            order={index}
+          />
+        ))}
+    </Container>
   )
 }
 

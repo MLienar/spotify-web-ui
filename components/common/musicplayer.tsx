@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import Control from './icons/control'
 import Play from '../../public/images/play.png'
-import Volume from '../../public/images/volume.png'
+
 import Skip from '../../public/images/skip.png'
 import ProgressBar from './musicplayer/progressBar'
-import { useState, useRef, useEffect, useContext } from 'react'
+import { useState, useRef, useEffect, useContext, ChangeEvent } from 'react'
 import { AppContext } from '../../services/context'
 import spotifyAPI from '../../lib/spotify'
 import { useSession } from 'next-auth/react'
@@ -12,6 +12,7 @@ import useSongInfo from '../../hooks/useSongInfo'
 import SpotifyPlayer from './musicplayer/spotifyPlayer'
 import Image from 'next/image'
 import { play } from '../../lib/spotify'
+import VolumeSlider from './musicplayer/volumeSlider'
 
 const Bar = styled.div`
   display: flex;
@@ -36,17 +37,13 @@ const Controls = styled.div`
   align-items: center;
 `
 
-const VolumeControl = styled.div`
-  display: flex;
-`
-
 export default function MusicPlayer() {
   const [playPauseSrc, setPlayPause] = useState('/images/play.png')
   const [duration, setDuration] = useState(0)
   const [position, setPosition] = useState(0)
   const [ratio, setRatio] = useState(0)
   const [deviceId, setDeviceId] = useState(null)
-  const [volume, setVolume] = useState(0)
+  const [volume, setVolume] = useState(50)
   const {
     player,
     playlist,
@@ -95,6 +92,12 @@ export default function MusicPlayer() {
     }
   }
 
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseInt(e.target.value)
+    player.setVolume(newVolume / 100)
+    setVolume(newVolume)
+  }
+
   return (
     <Bar>
       <SpotifyPlayer playbackState={playbackStateUpdate} />
@@ -134,10 +137,7 @@ export default function MusicPlayer() {
         </Controls>
         <ProgressBar currentTime={position} duration={duration} seek={seek} />
       </MediaControls>
-      <VolumeControl>
-        <Image src={Volume} height={20} width={20} />
-        <input type="range" />
-      </VolumeControl>
+      <VolumeSlider setVolume={handleVolumeChange} value={volume} />
     </Bar>
   )
 }

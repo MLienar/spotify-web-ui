@@ -3,11 +3,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["i.scdn.co"],
+    domains: ['i.scdn.co'],
   },
-  experimental: {
-    scrollRestoration: true,
-  },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

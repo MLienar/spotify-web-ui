@@ -56,3 +56,37 @@ p {
 .album-page .gallery {
   padding: 0 25px;
 }
+
+/* style volume range */
+input[type='range']::-moz-range-progress {
+  background-color: #43e5f7;
+}
+
+input[type='range']::-ms-fill-lower {
+  background-color: #43e5f7;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type='range'] {
+    -webkit-appearance: none;
+    overflow: hidden;
+    background-color: #0e283a;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    color: #033658;
+    background-color: #033658;
+    margin-top: -1px;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    width: 5px;
+    -webkit-appearance: none;
+    height: 5px;
+    background: white;
+    box-shadow: -80px 0 0 80px white;
+  }
+}
