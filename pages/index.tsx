@@ -41,9 +41,13 @@ const Home = () => {
   const [range, setRange] = useState('medium_term')
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getMyTopArtists().then((data: any) => {
-        setData(data.body.items)
-      })
+      spotifyApi
+        .getMyTopArtists({
+          time_range: 'long_term',
+        })
+        .then((data: any) => {
+          setData(data.body.items)
+        })
     }
     setAnimateAlbum(true)
   }, [session, spotifyApi])
