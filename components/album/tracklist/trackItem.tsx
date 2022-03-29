@@ -96,7 +96,7 @@ interface Props {
   duration: number
   preview: string
   index: number
-  onClick: any
+  onClick: () => void
 }
 
 export default function TrackItem({

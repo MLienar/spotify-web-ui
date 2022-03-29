@@ -6,7 +6,17 @@ import { AppContext } from '../../../services/context'
 import { play } from '../../../lib/spotify'
 
 interface Props {
-  playbackState: any
+  playbackState: (position: number, duration: number) => void
+}
+
+interface SongScrubInfo {
+  position: number
+  duration: number
+}
+
+interface PlayerResponse {
+  device_id: string
+  message: string
 }
 
 export default function SpotifyPlayer({ playbackState }: Props) {
@@ -26,30 +36,36 @@ export default function SpotifyPlayer({ playbackState }: Props) {
   useEffect(() => {
     if (player) {
       player.setName('Spotify Web UI')
-      player.addListener('ready', ({ device_id }: any) => {
+      player.addListener('ready', ({ device_id }: PlayerResponse) => {
         console.log('Ready with Device ID', device_id)
         setDeviceId(device_id)
       })
 
-      player.addListener('not_ready', ({ device_id }: any) => {
+      player.addListener('not_ready', ({ device_id }: PlayerResponse) => {
         console.log('Device ID has gone offline', device_id)
       })
 
-      player.addListener('initialization_error', ({ message }: any) => {
-        console.error(message)
-      })
+      player.addListener(
+        'initialization_error',
+        ({ message }: PlayerResponse) => {
+          console.error(message)
+        }
+      )
 
-      player.addListener('authentication_error', ({ message }: any) => {
-        console.error(message)
-      })
+      player.addListener(
+        'authentication_error',
+        ({ message }: PlayerResponse) => {
+          console.error(message)
+        }
+      )
 
-      player.addListener('account_error', ({ message }: any) => {
+      player.addListener('account_error', ({ message }: PlayerResponse) => {
         console.error(message)
       })
 
       player.addListener(
         'player_state_changed',
-        ({ position, duration }: any) => {
+        ({ position, duration }: SongScrubInfo) => {
           if (position && duration) {
             playbackState(position, duration)
           }

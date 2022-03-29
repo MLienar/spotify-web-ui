@@ -3,11 +3,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Layout from '../components/layout'
-import { FavItems } from '../services/types'
+import { Artist, FavItems } from '../services/types'
 import { useRef, ReactElement, useEffect, useState, useContext } from 'react'
 import { AppContext } from '../services/context'
-import Login from '../components/login/login'
-import axios from 'axios'
 import Gallery from '../components/gallery/gallery'
 import styled from 'styled-components'
 import gsap from 'gsap'
@@ -30,6 +28,24 @@ const Container = styled.div`
   }
 `
 
+interface APIResponse {
+  body: {
+    href: string
+    items: FavItems[]
+    limit: number
+    next: string
+    offset: number
+    previous: number | null
+    total: number
+  }
+  headers: {
+    cacheControl: string
+    contentLength: string
+    contentType: string
+  }
+  statusCode: number
+}
+
 const Home = () => {
   const value = useContext(AppContext)
   const spotifyApi = useSpotify()
@@ -43,9 +59,9 @@ const Home = () => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi
         .getMyTopArtists({
-          time_range: 'long_term',
+          time_range: 'medium_term',
         })
-        .then((data: any) => {
+        .then((data: APIResponse) => {
           setData(data.body.items)
         })
     }

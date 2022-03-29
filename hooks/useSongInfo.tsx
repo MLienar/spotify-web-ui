@@ -1,6 +1,25 @@
 import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../services/context'
 import useSpotify from './useSpotify'
+import { Track } from '../services/types'
+
+interface ApiResponse {
+  headers: {
+    cacheControl: string
+    contentLength: string
+    contentType: string
+  }
+  body: {
+    items: [{ context: null; playedAt: string; track: Track }]
+    cursors: {
+      after: string
+      before: string
+    }
+    limit: number
+    next: string
+  }
+  errorCode: number
+}
 
 function useSongInfo() {
   const spotifyApi = useSpotify()
@@ -20,14 +39,14 @@ function useSongInfo() {
             .getMyRecentlyPlayedTracks({
               limit: 1,
             })
-            .then((data: any) => {
+            .then((data: ApiResponse) => {
               return data.body.items[0].track.id
             })
 
           console.log(currentTrackId)
         }
         if (currentTrackId) {
-          const trackInfo: any = await fetch(
+          const trackInfo: Track = await fetch(
             `
                 https://api.spotify.com/v1/tracks/${currentTrackId}`,
             {
@@ -36,6 +55,7 @@ function useSongInfo() {
               },
             }
           ).then((response) => response.json())
+
           setSongInfo(trackInfo)
           if (firstTime) {
             setPlaylist(trackInfo)

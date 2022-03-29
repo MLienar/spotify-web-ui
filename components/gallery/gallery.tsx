@@ -7,8 +7,6 @@ import { useState, useEffect, useContext, useRef } from 'react'
 import { useIsomorphicLayoutEffect, useIntersection } from 'react-use'
 import { AppContext } from '../../services/context'
 import gsap from 'gsap'
-import checkIfInView from '../../services/checkIfInView'
-import useOnScreen from '../../hooks/useOnScreen'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import useSpotify from '../../hooks/useSpotify'
@@ -63,6 +61,23 @@ interface Props {
   profilePic?: string | null
   order: number
   artistId: string
+}
+
+interface AlbumListResponse {
+  body: {
+    href: string
+    items: AlbumType[]
+    limit: number
+    offset: number
+    previous: null | string
+    total: number
+  }
+  headers: {
+    cacheControls: string
+    contentLength: string
+    contentType: string
+  }
+  statusCode: number
 }
 
 export default function Gallery({
@@ -152,10 +167,12 @@ export default function Gallery({
 
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getArtistAlbums(artistId, params).then((data: any) => {
-        const albumsToDisplay = filterItems(data.body.items)
-        setData(albumsToDisplay)
-      })
+      spotifyApi
+        .getArtistAlbums(artistId, params)
+        .then((data: AlbumListResponse) => {
+          const albumsToDisplay = filterItems(data.body.items)
+          setData(albumsToDisplay)
+        })
     }
   }, [session, spotifyApi])
 
@@ -174,7 +191,7 @@ export default function Gallery({
       )}
       <GallerySlide>
         {data.length > 0 &&
-          data.map((album: any) => (
+          data.map((album: AlbumType) => (
             <Album
               url={album.id}
               src={album.images[0].url}

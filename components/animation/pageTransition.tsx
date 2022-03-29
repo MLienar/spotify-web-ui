@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { ReactNode, useContext, useRef, useState } from 'react'
 import {
   TransitionGroup,
   Transition as ReactTransition,
@@ -19,13 +19,13 @@ const Transition = ({ children, location }: Props) => {
 
   const parentNode = useRef(null)
   const pN = gsap.utils.selector(parentNode)
-  const completeCall = (target: any, parent: any) => {
+  const completeCall = (target: gsap.TweenTarget, parent: gsap.TweenTarget) => {
     gsap.set(target, { clearProps: 'position, width' })
     parent && gsap.set(parent, { clearProps: 'overflow' })
     window.scrollTo(0, 0)
   }
 
-  const onEnterHandler = (node: any) => {
+  const onEnterHandler = (node: gsap.TweenTarget) => {
     gsap.killTweensOf(node)
     // Set initial position and styles
     gsap.set(node, {
@@ -44,7 +44,7 @@ const Transition = ({ children, location }: Props) => {
     })
   }
 
-  const onExitHandler = (node: any) => {
+  const onExitHandler = (node: gsap.TweenTarget) => {
     gsap.killTweensOf(node)
     // Create the animation for the incoming component
     gsap.to(pN('.album-link-container'), {

@@ -28,6 +28,16 @@ interface Props {
   albumId: string
 }
 
+interface APIResponse {
+  body: AlbumType
+  headers: {
+    cacheControl: string
+    contentLength: string
+    contentType: string
+  }
+  statusCode: number
+}
+
 const Album = () => {
   const router = useRouter()
   const spotifyApi = useSpotify()
@@ -41,7 +51,7 @@ const Album = () => {
 
   useEffect(() => {
     if (spotifyApi.getAccessToken() && id) {
-      spotifyApi.getAlbum(id).then((data: any) => {
+      spotifyApi.getAlbum(id).then((data: APIResponse) => {
         setData(data.body)
       })
     }

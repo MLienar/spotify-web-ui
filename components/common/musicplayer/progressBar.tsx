@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -35,7 +35,7 @@ const Progress = styled.div`
 type Props = {
   currentTime: number
   duration: number
-  seek: any
+  seek: (newPosition: number) => void
 }
 
 const convertTime = (time: number) => {
@@ -53,8 +53,8 @@ export default function ProgressBar({
     setRatio((currentTime / duration) * 100)
   }, [currentTime])
 
-  const seekPosition = (e: any) => {
-    const barPosition = e.target.getBoundingClientRect()
+  const seekPosition = (e: React.MouseEvent<HTMLElement>) => {
+    const barPosition = e.currentTarget.getBoundingClientRect()
     const width = barPosition.right - barPosition.left
     const clickPos = e.clientX - barPosition.left
 

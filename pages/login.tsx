@@ -67,7 +67,6 @@ export default function Login({ providers }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const c = gsap.utils.selector(ref)
   const tl = useRef<any>()
-  console.log(providers)
 
   useIsomorphicLayoutEffect(() => {
     tl.current = gsap
@@ -113,8 +112,8 @@ export default function Login({ providers }: Props) {
 }
 
 export async function getServerSideProps() {
-  const providers = await getProviders()
   console.log('yo')
+  const providers = await getProviders()
 
   return {
     props: {

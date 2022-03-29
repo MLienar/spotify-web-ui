@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { useState, useEffect, useContext } from 'react'
-import { AppContext } from '../../../services/context'
-import axios from 'axios'
+import { UserProfile } from '../../../services/types'
 import LogoutButton from './logoutButton'
 import ProfilePicture from './profilePicture'
 import ProfileName from './profileName'
@@ -13,6 +12,16 @@ interface ProfileData {
   display_name: string
   id: string
   images: []
+}
+
+interface APIProfileResponse {
+  headers: {
+    cacheControl: string
+    contentLength: string
+    contentType: string
+  }
+  body: UserProfile
+  statusCode: number
 }
 
 const Container = styled.div`
@@ -35,13 +44,13 @@ const Container = styled.div`
 
 export default function ProfilePill() {
   const [hover, setHover] = useState(false)
-  const [data, setData] = useState<ProfileData>({} as ProfileData)
+  const [data, setData] = useState<UserProfile>({} as UserProfile)
   const router = useRouter()
   const { data: session, status } = useSession()
   const spotifyApi = useSpotify()
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
-      spotifyApi.getMe().then((data: any) => {
+      spotifyApi.getMe().then((data: APIProfileResponse) => {
         setData(data.body)
       })
     }

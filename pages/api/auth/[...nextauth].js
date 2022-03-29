@@ -32,7 +32,6 @@ export default NextAuth({
       authorization: LOGIN_URL,
       clientSecret: process.env.NEXT_PUBLIC_CLIENT_SECRET,
     }),
-    // ...add more providers here
   ],
   secret: process.env.JWT_SECRET,
   pages: {
