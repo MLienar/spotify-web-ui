@@ -125,8 +125,6 @@ export default function MusicPlayer() {
             type="next"
             src="/images/skip.png"
             onClick={() => {
-              console.log(playlistIndex, playlist.length)
-
               if (playlistIndex === playlist.length - 1) {
                 setPlaylistIndex(0)
                 return

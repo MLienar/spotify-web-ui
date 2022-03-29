@@ -42,8 +42,6 @@ function useSongInfo() {
             .then((data: ApiResponse) => {
               return data.body.items[0].track.id
             })
-
-          console.log(currentTrackId)
         }
         if (currentTrackId) {
           const trackInfo: Track = await fetch(

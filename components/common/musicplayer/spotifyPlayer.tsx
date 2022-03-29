@@ -37,13 +37,10 @@ export default function SpotifyPlayer({ playbackState }: Props) {
     if (player) {
       player.setName('Spotify Web UI')
       player.addListener('ready', ({ device_id }: PlayerResponse) => {
-        console.log('Ready with Device ID', device_id)
         setDeviceId(device_id)
       })
 
-      player.addListener('not_ready', ({ device_id }: PlayerResponse) => {
-        console.log('Device ID has gone offline', device_id)
-      })
+      player.addListener('not_ready', ({ device_id }: PlayerResponse) => {})
 
       player.addListener(
         'initialization_error',

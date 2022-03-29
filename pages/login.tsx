@@ -112,7 +112,6 @@ export default function Login({ providers }: Props) {
 }
 
 export async function getServerSideProps() {
-  console.log('yo')
   const providers = await getProviders()
 
   return {
