@@ -32,16 +32,16 @@ const Display = styled.div`
 const Options = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
   position: absolute;
   z-index: 100;
   min-width: 200px;
-  top: 110%;
+  top: 100%;
   left: 0;
 `
 
 const Option = styled.span`
-  font-size: 20px;
+  font-size: 18px;
   color: #a8a8a8;
   z-index: 100;
   &:hover {
@@ -126,7 +126,7 @@ export default function HomeTitle({ changeRange, currentOption }: Props) {
     <Title ref={ref}>
       Your top artists of
       <Select>
-        <Display onClick={toggleOptions} className="display">
+        <Display className="display" onClick={toggleOptions}>
           {currentOption.text}
         </Display>
         {openOptions ? (
