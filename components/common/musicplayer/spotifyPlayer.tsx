@@ -85,9 +85,7 @@ export default function SpotifyPlayer({ playbackState }: Props) {
       // @ts-ignore
       const newPlayer = new window.Spotify.Player({
         name: 'Web Playback SDK',
-        // @ts-ignore
-        getOAuthToken: (cb) => {
-          //@ts-ignore
+        getOAuthToken: (cb: (token: string) => void) => {
           cb(spotifyAPI.getAccessToken())
         },
         volume: 0.5,

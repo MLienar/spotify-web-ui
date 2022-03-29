@@ -3,15 +3,14 @@ import { useEffect } from 'react'
 import spotifyApi from '../lib/spotify'
 
 function useSpotify() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
   useEffect(() => {
     if (session) {
       if (session.error == 'RefreshAccessTokenError') {
         signIn()
       }
-      // @ts-ignore
-      spotifyApi.setAccessToken(session.user.accessToken)
+      spotifyApi.setAccessToken(session.user?.accessToken)
     }
   }, [session])
 
