@@ -90,7 +90,7 @@ export default function Gallery({
   const value = useContext(AppContext)
   const ref = useRef(null)
   const r = gsap.utils.selector(ref)
-  const tl = useRef<any>()
+  const tl = useRef<GSAPTimeline>()
   const { pathname } = useRouter()
   const { data: session, status } = useSession()
   const spotifyApi = useSpotify()

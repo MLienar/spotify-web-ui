@@ -66,7 +66,7 @@ interface Props {
 export default function Login({ providers }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const c = gsap.utils.selector(ref)
-  const tl = useRef<any>()
+  const tl = useRef<GSAPTimeline>()
 
   useIsomorphicLayoutEffect(() => {
     tl.current = gsap

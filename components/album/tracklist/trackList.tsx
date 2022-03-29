@@ -23,7 +23,7 @@ export default function TrackList({ tracks }: Props) {
   const r = gsap.utils.selector(ref)
   const { animateAlbum, setAnimateAlbum, setPlaylist, setPlaylistIndex } =
     useContext(AppContext)
-  const tl = useRef<any>()
+  const tl = useRef<GSAPTimeline>()
   useIsomorphicLayoutEffect(() => {
     tl.current = gsap
       .timeline({

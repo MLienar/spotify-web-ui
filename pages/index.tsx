@@ -46,6 +46,11 @@ interface APIResponse {
   statusCode: number
 }
 
+interface Option {
+  query: string
+  text: string
+}
+
 const Home = () => {
   const value = useContext(AppContext)
   const spotifyApi = useSpotify()
@@ -54,25 +59,30 @@ const Home = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const { data: session, status } = useSession()
   const [data, setData] = useState<FavItems[]>([])
-  const [range, setRange] = useState('medium_term')
+  const [currentRange, setCurrentRange] = useState({
+    text: 'The Last 6 Months',
+    query: 'medium_term',
+  })
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       spotifyApi
         .getMyTopArtists({
-          time_range: 'medium_term',
+          time_range: currentRange.query,
         })
         .then((data: APIResponse) => {
           setData(data.body.items)
         })
     }
     setAnimateAlbum(true)
-  }, [session, spotifyApi])
+  }, [session, spotifyApi, currentRange])
 
-  const changeRange = () => {}
+  const changeRange = (range: Option) => {
+    setCurrentRange(range)
+  }
 
   return (
     <Container>
-      <HomeTitle changeRange={changeRange} />
+      <HomeTitle changeRange={changeRange} currentOption={currentRange} />
       {data.length > 0 &&
         data.map((artist: FavItems, index) => (
           <Gallery

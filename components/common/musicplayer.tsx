@@ -1,17 +1,10 @@
 import styled from 'styled-components'
 import Control from './icons/control'
-import Play from '../../public/images/play.png'
-
-import Skip from '../../public/images/skip.png'
 import ProgressBar from './musicplayer/progressBar'
-import { useState, useRef, useEffect, useContext, ChangeEvent } from 'react'
+import { useState, useRef, useEffect, useContext } from 'react'
 import { AppContext } from '../../services/context'
-import spotifyAPI from '../../lib/spotify'
 import { useSession } from 'next-auth/react'
-import useSongInfo from '../../hooks/useSongInfo'
 import SpotifyPlayer from './musicplayer/spotifyPlayer'
-import Image from 'next/image'
-import { play } from '../../lib/spotify'
 import VolumeSlider from './musicplayer/volumeSlider'
 
 const Bar = styled.div`

@@ -30,19 +30,27 @@ function useSongInfo() {
   useEffect(() => {
     if (spotifyApi.getAccessToken()) {
       const fetchSongInfo = async () => {
+        // if (firstTime) {
+        //   console.log('yo')
+        //   setPlaylist([])
+        //   setSongInfo(null)
+        //   setFirstTime(false)
+        //   return
+        // }
         // A track has been selected by user
         let currentTrackId = ''
-        if (playlist.length > 0) {
+        if (playlist && playlist.length > 0) {
           currentTrackId = playlist[playlistIndex].id
-        } else {
-          currentTrackId = await spotifyApi
-            .getMyRecentlyPlayedTracks({
-              limit: 1,
-            })
-            .then((data: ApiResponse) => {
-              return data.body.items[0].track.id
-            })
         }
+        // else {
+        //   currentTrackId = await spotifyApi
+        //     .getMyRecentlyPlayedTracks({
+        //       limit: 1,
+        //     })
+        //     .then((data: ApiResponse) => {
+        //       return data.body.items[0].track.id
+        //     })
+        // }
         if (currentTrackId) {
           const trackInfo: Track = await fetch(
             `
@@ -53,12 +61,7 @@ function useSongInfo() {
               },
             }
           ).then((response) => response.json())
-
           setSongInfo(trackInfo)
-          if (firstTime) {
-            setPlaylist(trackInfo)
-            setFirstTime(false)
-          }
         }
       }
       fetchSongInfo()

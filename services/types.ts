@@ -89,9 +89,9 @@ export type ContextType = {
   state: {
     token: null | String
   }
-  timeline: any
-  setTimeline: any
-  setToken: any
+  timeline: GSAPTimeline
+  setTimeline: () => void
+  setToken: () => void
 }
 
 export type UserProfile = {

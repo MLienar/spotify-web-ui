@@ -45,7 +45,7 @@ export default function Album({ url, src, title }: Props) {
 
   const ref = useRef(null)
   const r = gsap.utils.selector(ref)
-  const tl = useRef<any>()
+  const tl = useRef<GSAPTimeline>()
   const album = useRef(null)
   const flipAlbum = () => {}
 

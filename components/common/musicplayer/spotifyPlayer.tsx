@@ -96,7 +96,7 @@ export default function SpotifyPlayer({ playbackState }: Props) {
 
   //   Change playback on playlist update
   useEffect(() => {
-    if (playlist.length > 0) {
+    if (playlist && playlist.length > 0) {
       play({
         playerInstance: player,
         deviceId: deviceId,
