@@ -50,12 +50,13 @@ opacity: 0,
 `
 
 interface Props {
-  artwork: string
+  artwork?: string
   title: string
-  artists: Artist[]
+  artists?: Artist[]
   date: string
   length: number
-  albumUrl: string | string[] | undefined
+  albumUrl?: string | string[] | undefined
+  children?: React.ReactChild
 }
 
 export default function Header({
@@ -65,6 +66,7 @@ export default function Header({
   date,
   length,
   albumUrl,
+  children,
 }: Props) {
   const ref = useRef(null)
   const r = gsap.utils.selector(ref)
@@ -208,15 +210,22 @@ export default function Header({
   return (
     <Container className="album-header" ref={ref}>
       <AlbumContainer additionalClass="album-container new">
-        <Artwork src={artwork} alt={title} priority />
+        {artwork ? (
+          <Artwork src={artwork} alt={title} priority />
+        ) : (
+          <>{children}</>
+        )}
       </AlbumContainer>
 
       <TextPart className="text-part">
-        <Artists className="text-reveal">
-          {artists.map((artist) => {
-            return <li key={artist.name}>{artist.name}</li>
-          })}
-        </Artists>
+        {artists && (
+          <Artists className="text-reveal">
+            {artists.map((artist) => {
+              return <li key={artist.name}>{artist.name}</li>
+            })}
+          </Artists>
+        )}
+
         <AlbumTitle className="text-reveal"> {title}</AlbumTitle>
         <AlbumDetails date={date} length={length} />
       </TextPart>

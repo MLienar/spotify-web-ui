@@ -52,6 +52,7 @@ export type Tracks = {
 }
 
 export type Track = {
+  album: Album
   artists: Artist[]
   available_markets: string[]
   duration_ms: number
@@ -113,4 +114,42 @@ export type UserProfile = {
   product: string
   type: string
   uri: string
+}
+
+export type Playlist = {
+  collaborative: boolean
+  description: string
+  externalUrls: externalUrls
+  href: string
+  id: string
+  images: Image[]
+  name: string
+  owner: {
+    displayName: string
+    externalUrls: externalUrls
+    href: string
+    id: string
+    type: string
+    uri: string
+  }
+  primaryColor: null | string
+  public: boolean
+  snapshotId: string
+  tracks: {
+    offset: number
+    next: null | string
+    href: string
+    previous: string
+    total: number
+    items: PlaylistTrack[]
+  }
+  type: string
+  uri: string
+}
+
+type PlaylistTrack = {
+  addedAt: string
+  isLocal: boolean
+  primaryColor: null
+  track: Track
 }

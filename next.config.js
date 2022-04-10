@@ -3,7 +3,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['i.scdn.co'],
+    domains: [
+      'i.scdn.co',
+      'blend-playlist-covers.spotifycdn.com',
+      'mosaic.scdn.co',
+    ],
   },
 }
 

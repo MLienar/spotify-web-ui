@@ -15,7 +15,7 @@ const Container = styled.div`
 `
 
 interface Props {
-  tracks: Tracks
+  tracks: Track[]
 }
 
 export default function TrackList({ tracks }: Props) {
@@ -59,8 +59,8 @@ export default function TrackList({ tracks }: Props) {
     let newPlaylist = []
     setPlaylist(null)
 
-    for (let i = 0; i < tracks.items.length; i++) {
-      newPlaylist.push(tracks.items[i])
+    for (let i = 0; i < tracks.length; i++) {
+      newPlaylist.push(tracks[i])
     }
     setPlaylistIndex(index)
     setPlaylist(newPlaylist)
@@ -68,7 +68,7 @@ export default function TrackList({ tracks }: Props) {
 
   return (
     <Container ref={ref} className="container">
-      {tracks.items.map((track, index) => (
+      {tracks.map((track, index) => (
         <TrackItem
           title={track.name}
           artists={track.artists}

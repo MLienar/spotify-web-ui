@@ -60,14 +60,10 @@ export default function SpotifyPlayer({ playbackState }: Props) {
         console.error(message)
       })
 
-      player.addListener(
-        'player_state_changed',
-        ({ position, duration }: SongScrubInfo) => {
-          if (position && duration) {
-            playbackState(position, duration)
-          }
-        }
-      )
+      player.addListener('player_state_changed', (info: SongScrubInfo) => {
+        let { position, duration } = info
+        playbackState(position, duration)
+      })
       player.connect()
       player.activateElement()
     }
