@@ -18,7 +18,8 @@ type Props = {
 const Body = styled.div`
   display: grid;
   grid-template-columns: 1fr 5fr;
-  grid-template-rows: auto min-content;
+  grid-template-rows: auto min-content
+  position: relative;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: 100vh;

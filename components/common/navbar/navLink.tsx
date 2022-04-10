@@ -7,10 +7,15 @@ const LinkEl = styled.a`
   gap: 10px;
   align-items: center;
   cursor: pointer;
+  width: clamp(130px, 13vw, 200px);
+  white-space: nowrap;
+  overflowx: hidden;
+  height: fit-content;
 `
 const ImageWrapper = styled.div`
   height: 22px;
   width: 22px;
+  flex-shrink: 0;
   position: relative;
   background: #fefefe2f;
   border-radius: 15px;
@@ -20,6 +25,11 @@ const ImageWrapper = styled.div`
 const LinkText = styled.p`
   font-size: 0.8rem;
   color: grey;
+  width: clamp(130px, 13vw, 200px);
+  white-space: nowrap;
+  overflow: hidden;
+  height: fit-content;
+  text-overflow: ellipsis;
   &:hover  {
     color: white;
     transition: all 0.3s ease-in-out;

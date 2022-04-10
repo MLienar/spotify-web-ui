@@ -14,6 +14,11 @@ const Bar = styled.div`
   background: #191427;
   grid-area: 2 / 1 / 3 / 3;
   padding: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 6;
   gap: 10px;
 `
 
