@@ -193,7 +193,7 @@ export default function Gallery({
         {data.length > 0 &&
           data.map((album: AlbumType) => (
             <Album
-              url={album.id}
+              url={`album/${album.id}`}
               src={album.images[0].url}
               title={album.name}
               key={album.id}

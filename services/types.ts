@@ -73,6 +73,8 @@ export type Artist = {
   href: string
   id: string
   name: string
+  images: Image[]
+  popularity: number
   type: string
   uri: string
 }

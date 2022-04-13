@@ -12,6 +12,7 @@ interface Props {
 interface SongScrubInfo {
   position: number
   duration: number
+  paused: boolean
 }
 
 interface PlayerResponse {
@@ -61,8 +62,13 @@ export default function SpotifyPlayer({ playbackState }: Props) {
       })
 
       player.addListener('player_state_changed', (info: SongScrubInfo) => {
-        let { position, duration } = info
-        playbackState(position, duration)
+        if (info) {
+          let { position, duration, paused } = info
+          playbackState(position, duration)
+          if (paused) {
+            setIsPlaying(false)
+          }
+        }
       })
       player.connect()
       player.activateElement()
@@ -102,7 +108,6 @@ export default function SpotifyPlayer({ playbackState }: Props) {
     }
   }, [playlist, playlistIndex])
 
-  //
   return (
     <CurrentlyPlaying
       albumImage={songInfo?.album.images?.[0]?.url}

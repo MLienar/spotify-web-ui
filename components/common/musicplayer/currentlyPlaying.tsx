@@ -11,8 +11,10 @@ const Container = styled.div`
 `
 
 const AlbumContainer = styled.div`
-  height: 100%;
   aspect-ratio: 1/1;
+  width: 12%;
+  min-width: 40px;
+  max-width: 50px;
   position: relative;
 `
 
@@ -24,7 +26,10 @@ const Details = styled.div`
 
 const Title = styled.h3`
   font-size: 1.1rem;
+  overflow: hidden;
+  width: clamp(150px, 20vw, 250px);
   white-space: nowrap;
+  text-overflow: ellipsis;
 `
 
 const Artist = styled.p`
@@ -50,7 +55,12 @@ export default function CurrentlyPlaying({
       {albumImage && (
         <>
           <AlbumContainer>
-            <Image src={albumImage} layout="fill" />
+            <Image
+              src={albumImage}
+              layout="responsive"
+              width={50}
+              height={50}
+            />
           </AlbumContainer>
           <Details>
             <Title>{title}</Title>

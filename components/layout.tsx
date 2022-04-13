@@ -17,8 +17,8 @@ type Props = {
 
 const Body = styled.div`
   display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: auto min-content
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: auto min-content;
   position: relative;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -29,6 +29,7 @@ const Body = styled.div`
 const Main = styled.main`
   grid-area: 1 / 2 / 2 / 3;
   max-height: 90vh;
+  width: 100%;
   overflow-y: scroll;
   gap: 30px;
   display: flex;

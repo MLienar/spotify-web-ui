@@ -90,6 +90,24 @@ export default function MusicPlayer() {
     }
   }
 
+  const previousSong = () => {
+    setPosition(0)
+    if (playlistIndex - 1 < 0) {
+      setPlaylistIndex(playlist.length - 1)
+      return
+    }
+    setPlaylistIndex(playlistIndex - 1)
+  }
+
+  const nextSong = () => {
+    setPosition(0)
+    if (playlistIndex === playlist.length - 1) {
+      setPlaylistIndex(0)
+      return
+    }
+    setPlaylistIndex(playlistIndex + 1)
+  }
+
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseInt(e.target.value)
     player.setVolume(newVolume / 100)
@@ -104,13 +122,7 @@ export default function MusicPlayer() {
           <Control
             type="previous"
             src="/images/skip.png"
-            onClick={() => {
-              if (playlistIndex - 1 < 0) {
-                setPlaylistIndex(playlist.length - 1)
-                return
-              }
-              setPlaylistIndex(playlistIndex - 1)
-            }}
+            onClick={previousSong}
           />
           <Control
             type="play"
@@ -119,19 +131,14 @@ export default function MusicPlayer() {
               togglePlay()
             }}
           />
-          <Control
-            type="next"
-            src="/images/skip.png"
-            onClick={() => {
-              if (playlistIndex === playlist.length - 1) {
-                setPlaylistIndex(0)
-                return
-              }
-              setPlaylistIndex(playlistIndex + 1)
-            }}
-          />
+          <Control type="next" src="/images/skip.png" onClick={nextSong} />
         </Controls>
-        <ProgressBar currentTime={position} duration={duration} seek={seek} />
+        <ProgressBar
+          currentTime={position}
+          duration={duration}
+          seek={seek}
+          finished={nextSong}
+        />
       </MediaControls>
       <VolumeSlider setVolume={handleVolumeChange} value={volume} />
     </Bar>

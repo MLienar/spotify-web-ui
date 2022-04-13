@@ -9,7 +9,6 @@ const Nav = styled.nav`
   align-items: flex-start;
   justify-content: flex-start;
   padding: 20px 30px;
-  position: absolute;
   background: #121124;
   height: 100%;
   z-index: 4;

@@ -15,10 +15,10 @@ const Container = styled.a`
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  width: 23%;
+  flex: 1 1 0;
   overflow: hidden;
-  min-width: 23%;
   gap: 10px;
+  max-width: 25%;
   cursor: pointer;
   position: relative;
 `
@@ -40,7 +40,6 @@ interface Props {
 }
 
 export default function Album({ url, src, title }: Props) {
-  const albumLink = `/album/${url}`
   const { timeline, setFlipState } = useContext(AppContext)
 
   const ref = useRef(null)
@@ -50,7 +49,7 @@ export default function Album({ url, src, title }: Props) {
   const flipAlbum = () => {}
 
   return (
-    <Link href={albumLink}>
+    <Link href={url}>
       <Container className="album-link-container" ref={ref} onClick={flipAlbum}>
         <AlbumContainer additionalClass="album-container">
           <Artwork src={src} alt={title} />

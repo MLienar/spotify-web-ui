@@ -36,21 +36,32 @@ type Props = {
   currentTime: number
   duration: number
   seek: (newPosition: number) => void
-}
-
-const convertTime = (time: number) => {
-  return new Date(time).toISOString().substr(14, 5)
+  finished: () => void
 }
 
 export default function ProgressBar({
   currentTime = 0,
   duration = 0,
   seek,
+  finished,
 }: Props) {
   const [ratio, setRatio] = useState(0)
 
+  const convertTime = (time: number) => {
+    if (currentTime > duration) {
+      return
+    }
+    return new Date(time).toISOString().substr(14, 5)
+  }
+
   useEffect(() => {
-    setRatio((currentTime / duration) * 100)
+    if (duration > 0) {
+      if (currentTime > duration) {
+        finished()
+        return
+      }
+      setRatio((currentTime / duration) * 100)
+    }
   }, [currentTime])
 
   const seekPosition = (e: React.MouseEvent<HTMLElement>) => {
